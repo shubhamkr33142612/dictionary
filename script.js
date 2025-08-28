@@ -3,63 +3,19 @@ const result = document.getElementById("result");
 const sound = document.getElementById("sound");
 const btn = document.getElementById("search-btn");
 
-// Typing effect constructor
-function TxtType(el, toRotate, period) {
-    this.toRotate = toRotate;
-    this.el = el;
-    this.loopNum = 0;
-    this.period = parseInt(period, 10) || 2000;
-    this.txt = '';
-    this.isDeleting = false;
-    this.tick();
-}
-
-TxtType.prototype.tick = function() {
-    var i = this.loopNum % this.toRotate.length;
-    var fullTxt = this.toRotate[i];
-
-    if (this.isDeleting) {
-        this.txt = fullTxt.substring(0, this.txt.length - 1);
-    } else {
-        this.txt = fullTxt.substring(0, this.txt.length + 1);
+ const textHTML = `TripFates <span class="shtextclrorg">India</span><br>
+                      <span class="shtextclrblue">New TRIP </span>
+                      <span class="shtextclrgreen">Experiance</span>`;
+    let i = 0;
+    function typeWriter() {
+      if (i < textHTML.length) {
+        document.getElementById("typewriter").innerHTML += textHTML.charAt(i);
+        i++;
+        setTimeout(typeWriter, 50); // typing speed
+      }
     }
+    window.onload = typeWriter;
 
-    this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
-
-    var that = this;
-    var delta = 200 - Math.random() * 100;
-
-    if (this.isDeleting) { delta /= 2; }
-
-    if (!this.isDeleting && this.txt === fullTxt) {
-        delta = this.period;
-        this.isDeleting = true;
-    } else if (this.isDeleting && this.txt === '') {
-        this.isDeleting = false;
-        this.loopNum++;
-        delta = 500;
-    }
-
-    setTimeout(function() {
-        that.tick();
-    }, delta);
-};
-
-window.onload = function () {
-    var elements = document.getElementsByClassName('typewrite');
-    for (var i = 0; i < elements.length; i++) {
-        var toRotate = elements[i].getAttribute('data-type');
-        var period = elements[i].getAttribute('data-period');
-        if (toRotate) {
-            new TxtType(elements[i], JSON.parse(toRotate), period);
-        }
-    }
-    // INJECT CSS
-    var css = document.createElement("style");
-    css.type = "text/css";
-    css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
-    document.body.appendChild(css);
-};
 btn.addEventListener("click", () => {
     let inpWord = document.getElementById("inp-word").value;
     fetch(`${url}${inpWord}`)
@@ -94,4 +50,5 @@ function playSound() {
     sound.play();
 
 }
+
 
